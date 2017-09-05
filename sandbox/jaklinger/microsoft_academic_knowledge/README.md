@@ -1,8 +1,10 @@
-# `microsoft_academic_knowledge`: Tools for working with MAK.
+# `microsoft_academic_knowledge`:
+Tools for working with MAK.
 ## Modules
 ### `mak_from_titles`
 #### Sign-off status
 Signed off by: Nobody
+
 |  Procedure | Status |
 | ------
 | Docstrings for every exposable method | Yes  | 
