@@ -6,7 +6,7 @@ Tools for working with MAK.
 Signed off by: Nobody
 
 |  Procedure | Status |
-| ------
+| --- | --- | 
 | Docstrings for every exposable method | Yes  | 
 | Docstrings for every editable parameter, near the top of the file | Yes
 | Docstring at the of the top file | Yes |
