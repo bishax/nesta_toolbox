@@ -76,7 +76,7 @@ class LatLonGetter:
         # Get the lat/lon
         lat = _df["lat"].values[0]
         lon = _df["lng"].values[0]
-        return (lat,lon,score)
+        return (lat,lon,match,score)
     
     def process_latlons(self,mak_institutes):
         isnull = pd.isnull(mak_institutes)
