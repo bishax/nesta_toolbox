@@ -11,7 +11,7 @@ class AutoCompounder:
     (which controls the minimum number of standard deviations required for an n-gram to pass the
     selection) is automatically determined according to when the change in word frequency
     becomes 'stable' with threshold change. 'Stable' is defined as a threshold range of <alpha>
-    standard deviation in which the change in word frequency is less than <beta>. The maximum 
+    standard deviations in which the change in word frequency is less than <beta>. The maximum 
     size of n-grams, from which the algorithm starts, is given by the <max_context> parameter.
     '''
 
@@ -93,13 +93,16 @@ class AutoCompounder:
         # Calculate the threshold data for this context
         first = sum(1 for _compound,_count in counts.items()
                     if _count > mean)
+        if first == 0:
+            return []
+        
         last_frac = 0
         best_threshold = 0
         found_any = False        
         for i in np.arange(0,self.max_threshold,self.threshold_increments):
             total = sum(1 for _compound,_count in counts.items()
                         if _count > mean + i*std)
-            # Calculate the total fraction removed due to this threshold
+            # Calculate the total fraction removed due to this threshold            
             frac_removed = (first - total)/first
             
             # The calculate the change in the fraction removed
@@ -129,7 +132,8 @@ class AutoCompounder:
             if _count <= mean + best_threshold*std:
                 compounds = list(filter((_compound).__ne__, compounds))
         # Return unique compounds
-        compounds = set(compounds)        
+        compounds = set(compounds)
+        # Drop contexts where the number of compounds hasn't changed
         self.drop[context] = (len(compounds) == first) 
         return compounds
 

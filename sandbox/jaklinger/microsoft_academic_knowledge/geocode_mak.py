@@ -1,3 +1,4 @@
+from tqdm import tqdm
 import pandas as pd
 import numpy as np
 from fuzzywuzzy import fuzz
@@ -46,8 +47,7 @@ class LatLonGetter:
                                       self.all_possible_values]
         self.fuzzy_matches = {}
 
-    def get_latlon(self,mak_name):
-        assert mak_name != ""
+    def get_latlon(self,mak_name,perfect_only=False):
         # Super-fast check to see if there is an exact match
         try:
             idx = self.lower_possible_values.index(mak_name)
@@ -55,6 +55,8 @@ class LatLonGetter:
             score = 1.
         # Otherwise, fuzzy match
         except ValueError:
+            if perfect_only:
+                return (None,None,None,0)
             # If already done a fuzzy match for this
             if mak_name in self.fuzzy_matches:
                 match,score = self.fuzzy_matches[mak_name]
@@ -78,26 +80,26 @@ class LatLonGetter:
         lon = _df["lng"].values[0]
         return (lat,lon,match,score)
     
-    def process_latlons(self,mak_institutes):
+    def process_latlons(self,mak_institutes,perfect_only=False):
         isnull = pd.isnull(mak_institutes)
         if type(isnull) is bool:
             if isnull:
                 return []
         elif all(isnull):
             return []
-        results = []
-        for mak_name in mak_institutes:
-            results.append(self.get_latlon(mak_name))
+        results = []        
+        for mak_name in tqdm(mak_institutes):
+            results.append(self.get_latlon(mak_name,perfect_only))
         return results
 
 '''
 Wrapper method: just pass a list of institutes from MAK
 and the path to the GRID data.
 '''
-def lat_lon_from_mak_names(mak_institutes,grid_path):
+def lat_lon_from_mak_names(mak_institutes,grid_path,perfect_only=False):
     cf = ComboFuzzer([fuzz.token_sort_ratio,fuzz.partial_ratio])
     llg = LatLonGetter(grid_path=grid_path,scorer=cf.combo_fuzz)    
-    return llg.process_latlons(mak_institutes)
+    return llg.process_latlons(mak_institutes,perfect_only)
 
 if __name__ == "__main__":
     mak_institutes = ["united arab emirates university","university of sharjah","masdar institute of science and technology",
