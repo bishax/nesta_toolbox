@@ -41,4 +41,4 @@ able to fill out the following table for each module of code:
 | A requirements file* | No |
 | Successful hallway testing | No |
 
-\* Note that you can generate a requirements file according to **Method 2** [here](http://www.idiotinside.com/2015/05/10/python-auto-generate-requirements.txt).
+\* Note that you can generate a requirements file according to **Method 2** [here](http://www.idiotinside.com/2015/05/10/python-auto-generate-requirements-txt).
